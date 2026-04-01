@@ -39,11 +39,11 @@ def ask_gemini(news_text):
     # 🌟 프롬프트 수정: 문장 사이에 <br><br>을 넉넉히 넣도록 지시
     prompt = f"""
     너는 {EXPERT_ROLE}야. 아래의 최신 '{SEARCH_TOPIC}' 관련 뉴스 헤드라인 {NEWS_COUNT}개를 읽고, 
-    오늘의 주요 트렌드를 일반인이 이해하기 쉽게 딱 {SUMMARY_SENTENCE_COUNT}문장으로 핵심만 요약해줘.
+    오늘의 주요 트렌드를 이해하기 쉽게 딱 {SUMMARY_SENTENCE_COUNT}문장으로 핵심만 요약해줘.
     
     [가독성 규칙]
     1. 이메일 본문에 들어갈 내용이므로 HTML 태그(<strong> 등)를 사용해줘. (마크다운 기호 금지)
-    2. 글이 답답해 보이지 않도록, **각 문장이 끝날 때마다 반드시 줄바꿈 태그(<br>)를 넣어서** 문장과 문장 사이를 넉넉하게 띄워줘.
+    2. 글이 답답해 보이지 않도록, **각 문장이 끝날 때마다 반드시 줄바꿈 태그(<br>)를 넣어서** 문장과 문장 사이를 읽기 편하게 해줘.
     
     [뉴스 헤드라인]
     {news_text}
@@ -69,7 +69,7 @@ def send_email(news_items, summary_html):
     for item in news_items:
         # 🌟 뉴스 리스트 간격 조절 (margin-bottom 증가, 개별 줄간격 확보)
         news_list_html += f"""
-        <li style='margin-bottom: 15px; line-height: 1.5;'>
+        <li style='margin-bottom: 15px; line-height: 1.4;'>
             <a href='{item['link']}' style='color: #1a73e8; text-decoration: none; font-weight: bold; font-size: 15px;'>
                 {item['title']}
             </a>
