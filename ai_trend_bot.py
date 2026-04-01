@@ -3,57 +3,90 @@ import smtplib
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from google import genai # 👈 구글 최신 라이브러리로 변경
+from google import genai
 
-def get_ai_news_titles():
+def get_ai_news_data():
+    # 1. 구글 뉴스 RSS에서 최신 AI 뉴스 5개 수집
     rss_url = "https://news.google.com/rss/search?q=Artificial+Intelligence&hl=ko&gl=KR&ceid=KR:ko"
     feed = feedparser.parse(rss_url)
-    titles = []
+    
+    news_items = []
+    news_text_for_gemini = ""
+    
     for entry in feed.entries[:5]:
-        titles.append(f"- {entry.title} ({entry.link})")
-    return "\n".join(titles)
+        # 메일 하단 리스트용 데이터
+        news_items.append({
+            "title": entry.title,
+            "link": entry.link
+        })
+        # 제미나이 분석용 텍스트
+        news_text_for_gemini += f"- {entry.title}\n"
+    
+    return news_items, news_text_for_gemini
 
 def ask_gemini(news_text):
+    # 2. 제미나이에게 요약 요청
     gemini_api_key = os.environ.get('GEMINI_API_KEY')
-    # 👈 최신 genai 클라이언트 문법으로 변경
-    client = genai.Client(api_key=gemini_api_key) 
+    client = genai.Client(api_key=gemini_api_key)
     
     prompt = f"""
-    너는 최고의 AI 트렌드 분석가야. 아래 오늘자 AI 뉴스 헤드라인 5개를 읽고, 
-    오늘의 AI 기술 트렌드를 3~4문장으로 핵심만 요약해줘.
-    그리고 이메일 본문으로 쓸 거니까, 반드시 HTML 태그(<br>, <strong>, <ul>, <li> 등)를 
-    사용해서 깔끔하고 예쁘게 꾸며서 답변해줘. 마크다운(```html) 기호는 빼고 순수 HTML만 출력해.
+    너는 IT 전문 뉴스 에디터야. 아래의 최신 AI 뉴스 헤드라인들을 읽고, 
+    오늘의 주요 트렌드를 일반인이 이해하기 쉽게 3~4문장으로 요약해줘.
     
-    [오늘의 뉴스]
+    이메일 본문에 들어갈 내용이므로 HTML 태그(<strong>, <br> 등)를 
+    적절히 섞어서 가독성 좋게 작성해줘. (마크다운 형식 금지)
+    
+    [뉴스 헤드라인]
     {news_text}
     """
     
-    # 👈 최신 생성 문법으로 변경
     response = client.models.generate_content(
         model='gemini-2.5-flash',
         contents=prompt
     )
     return response.text
 
-def send_email(gemini_html_content):
+def send_email(news_items, summary_html):
+    # 3. 이메일 구성 및 발송
     sender_email = os.environ.get('EMAIL_USER')
     sender_password = os.environ.get('EMAIL_PASSWORD')
     receiver_email = os.environ.get('RECEIVER_EMAIL')
 
     msg = MIMEMultipart()
-    msg['Subject'] = "🤖 [Gemini 분석] 오늘의 AI 트렌드 리포트"
+    msg['Subject'] = "🤖 오늘의 AI 트렌드 & 주요 뉴스 리포트"
     msg['From'] = sender_email
     msg['To'] = receiver_email
 
+    # 뉴스 리스트를 HTML <li> 태그로 변환
+    news_list_html = ""
+    for item in news_items:
+        news_list_html += f"""
+        <li style='margin-bottom: 10px;'>
+            <a href='{item['link']}' style='color: #1a73e8; text-decoration: none; font-weight: bold;'>
+                {item['title']}
+            </a>
+        </li>
+        """
+
     html_body = f"""
     <html>
-    <body style='font-family: Arial, sans-serif; line-height: 1.6;'>
-        <h2 style='color:#1a73e8;'>✨ Gemini가 분석한 오늘의 AI 트렌드</h2>
-        <div style='background-color:#f8f9fa; padding:15px; border-radius:8px;'>
-            {gemini_html_content}
+    <body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+        <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;'>
+            <h2 style='color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px;'>✨ 오늘의 AI 트렌드 요약</h2>
+            <div style='background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px;'>
+                {summary_html}
+            </div>
+            
+            <h3 style='color: #444;'>🔗 주요 뉴스 Top 5</h3>
+            <ul style='list-style: none; padding-left: 0;'>
+                {news_list_html}
+            </ul>
+            
+            <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+            <p style='font-size: 11px; color: #999; text-align: center;'>
+                본 리포트는 GitHub Actions와 Gemini 2.5 Flash 모델을 사용하여 자동으로 생성되었습니다.
+            </p>
         </div>
-        <br>
-        <p style='color:#999; font-size:11px;'>본 메일은 GitHub Actions와 Gemini API를 통해 자동 발송되었습니다.</p>
     </body>
     </html>
     """
@@ -68,11 +101,11 @@ def send_email(gemini_html_content):
         print(f"❌ 이메일 발송 실패: {e}")
 
 if __name__ == "__main__":
-    print("뉴스 수집 중...")
-    news_data = get_ai_news_titles()
+    print("뉴스 수집 및 분석 시작...")
+    items, text_for_ai = get_ai_news_data()
     
-    print("제미나이 분석 중...")
-    gemini_insight = ask_gemini(news_data)
+    print("제미나이 요약 생성 중...")
+    summary = ask_gemini(text_for_ai)
     
-    print("이메일 전송 중...")
-    send_email(gemini_insight)
+    print("이메일 발송 중...")
+    send_email(items, summary)
