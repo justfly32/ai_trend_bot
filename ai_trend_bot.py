@@ -69,14 +69,14 @@ def send_email(news_items, summary_html):
     for item in news_items:
         # 🌟 뉴스 리스트 간격 조절 (margin-bottom 증가, 개별 줄간격 확보)
         news_list_html += f"""
-        <li style='margin-bottom: 15px; line-height: 1.6;'>
+        <li style='margin-bottom: 15px; line-height: 1.5;'>
             <a href='{item['link']}' style='color: #1a73e8; text-decoration: none; font-weight: bold; font-size: 15px;'>
                 {item['title']}
             </a>
         </li>
         """
 
-    # 🌟 전체 줄간격(line-height: 2.0) 및 단어 끊김 방지(word-break) 추가
+    # 🌟 전체 줄간격 및 단어 끊김 방지(word-break) 추가
     html_body = f"""
     <html>
     <body style='font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; color: #333; line-height: 1.5; word-break: keep-all;'>
