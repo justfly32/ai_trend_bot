@@ -79,13 +79,13 @@ def send_email(news_items, summary_html):
     # 🌟 전체 줄간격(line-height: 2.0) 및 단어 끊김 방지(word-break) 추가
     html_body = f"""
     <html>
-    <body style='font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; color: #333; line-height: 2.0; word-break: keep-all;'>
+    <body style='font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; color: #333; line-height: 1.7; word-break: keep-all;'>
         <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; padding: 25px; border-radius: 12px;'>
             <h2 style='color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 12px; margin-top: 0;'>
                 ✨ 오늘의 {SEARCH_TOPIC} 트렌드
             </h2>
             
-            <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; line-height: 2.0; font-size: 16px;'>
+            <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; line-height: 1.7; font-size: 16px;'>
                 {summary_html}
             </div>
             
@@ -95,7 +95,7 @@ def send_email(news_items, summary_html):
             </ul>
             
             <hr style='border: 0; border-top: 1px solid #eee; margin: 30px 0;'>
-            <p style='font-size: 12px; color: #999; text-align: center; line-height: 2.0;'>
+            <p style='font-size: 12px; color: #999; text-align: ㅣleft; line-height: 1.7;'>
                 본 리포트는 GitHub Actions와 Gemini 모델을 사용하여 자동으로 생성되었습니다.
             </p>
         </div>
