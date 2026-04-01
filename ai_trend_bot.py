@@ -9,10 +9,10 @@ from google import genai
 # ==========================================
 # ⚙️ 봇 설정 변수
 # ==========================================
-SEARCH_TOPIC = "인공지능 AI 최신 기술"        # 검색할 주제 (구글 뉴스 검색 최적화)
-EXPERT_ROLE = "수석 AI 기술 분석 전문가"     # 제미나이 역할
-NEWS_COUNT = 10                          # 가져올 뉴스 개수
-SUMMARY_SENTENCE_COUNT = 3               # 요약할 문장 수
+SEARCH_TOPIC = "AI 최신 뉴스"             
+EXPERT_ROLE = "AI 분석 전문 애널리스트" 
+NEWS_COUNT = 10                          
+SUMMARY_SENTENCE_COUNT = 10               
 # ==========================================
 
 def get_news_data():
@@ -36,6 +36,7 @@ def ask_gemini(news_text):
     gemini_api_key = os.environ.get('GEMINI_API_KEY')
     client = genai.Client(api_key=gemini_api_key)
     
+    # 🌟 프롬프트 수정: 문장 사이에 <br><br>을 넉넉히 넣도록 지시
     prompt = f"""
     너는 {EXPERT_ROLE}야. 아래의 최신 '{SEARCH_TOPIC}' 관련 뉴스 헤드라인 {NEWS_COUNT}개를 읽고, 
     오늘의 주요 트렌드를 일반인이 이해하기 쉽게 딱 {SUMMARY_SENTENCE_COUNT}문장으로 핵심만 요약해줘.
@@ -49,7 +50,7 @@ def ask_gemini(news_text):
     """
     
     response = client.models.generate_content(
-        model='gemini-2.5-flash',
+        model='gemini-3.0-flash',
         contents=prompt
     )
     return response.text
@@ -60,13 +61,13 @@ def send_email(news_items, summary_html):
     receiver_email = os.environ.get('RECEIVER_EMAIL')
 
     msg = MIMEMultipart()
-    # 이메일 제목을 조금 더 전문가 리포트 느낌으로 다듬었습니다
-    msg['Subject'] = f"🤖 [AI Expert 브리핑] 오늘의 인공지능 트렌드 분석"
+    msg['Subject'] = f"🤖 [리포트] 오늘의 {SEARCH_TOPIC} 트렌드 요약"
     msg['From'] = sender_email
     msg['To'] = receiver_email
 
     news_list_html = ""
     for item in news_items:
+        # 🌟 뉴스 리스트 간격 조절 (margin-bottom 증가, 개별 줄간격 확보)
         news_list_html += f"""
         <li style='margin-bottom: 15px; line-height: 1.6;'>
             <a href='{item['link']}' style='color: #1a73e8; text-decoration: none; font-weight: bold; font-size: 15px;'>
@@ -75,26 +76,27 @@ def send_email(news_items, summary_html):
         </li>
         """
 
+    # 🌟 전체 줄간격(line-height: 2.0) 및 단어 끊김 방지(word-break) 추가
     html_body = f"""
     <html>
-    <body style='font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; color: #333; line-height: 1.8; word-break: keep-all;'>
+    <body style='font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; color: #333; line-height: 2.0; word-break: keep-all;'>
         <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; padding: 25px; border-radius: 12px;'>
             <h2 style='color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 12px; margin-top: 0;'>
-                💡 오늘의 AI 트렌드 인사이트
+                ✨ 오늘의 {SEARCH_TOPIC} 트렌드
             </h2>
             
             <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; line-height: 2.0; font-size: 16px;'>
                 {summary_html}
             </div>
             
-            <h3 style='color: #444; margin-bottom: 15px;'>🔗 실시간 AI 주요 뉴스 Top {NEWS_COUNT}</h3>
+            <h3 style='color: #444; margin-bottom: 15px;'>🔗 주요 뉴스 Top {NEWS_COUNT}</h3>
             <ul style='list-style: none; padding-left: 0;'>
                 {news_list_html}
             </ul>
             
             <hr style='border: 0; border-top: 1px solid #eee; margin: 30px 0;'>
-            <p style='font-size: 12px; color: #999; text-align: center; line-height: 1.5;'>
-                본 리포트는 GitHub Actions와 Gemini 2.5 Flash 모델을 사용하여 자동으로 생성되었습니다.
+            <p style='font-size: 12px; color: #999; text-align: center; line-height: 2.0;'>
+                본 리포트는 GitHub Actions와 Gemini 모델을 사용하여 자동으로 생성되었습니다.
             </p>
         </div>
     </body>
