@@ -2,8 +2,7 @@ name: Gemini AI Trend Bot
 
 on:
   schedule:
-    # 한국 시간 아침 8시 (UTC 기준 전날 밤 23시)
-    - cron: '0 23 * * *'
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -16,16 +15,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12' # 👈 3.10을 3.12로 수정!
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run bot
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # 👈 제미나이 키 추가!
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python ai_trend_bot.py
