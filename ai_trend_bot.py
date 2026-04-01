@@ -39,7 +39,7 @@ def ask_gemini(news_text):
     # 🌟 프롬프트 수정: 문장 사이에 <br><br>을 넉넉히 넣도록 지시
     prompt = f"""
     너는 {EXPERT_ROLE}야. 아래의 최신 '{SEARCH_TOPIC}' 관련 뉴스 헤드라인 {NEWS_COUNT}개를 읽고, 
-    오늘의 주요 트렌드를 이해하기 쉽게 딱 {SUMMARY_SENTENCE_COUNT}문장으로 핵심만 요약해주고, 문장간의 연결은 자연스럽게 해줘.
+    오늘의 주요 트렌드를 이해하기 쉽게 딱 {SUMMARY_SENTENCE_COUNT}문장으로 핵심만 요약해서, 뉴스 큐레이터가 설명하는 형식으로 해줘.
     
     [가독성 규칙]
     1. 이메일 본문에 들어갈 내용이므로 HTML 태그(<strong> 등)를 사용해줘. (마크다운 기호 금지)
