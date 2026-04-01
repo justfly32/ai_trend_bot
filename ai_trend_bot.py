@@ -79,7 +79,7 @@ def send_email(news_items, summary_html):
     # 🌟 전체 줄간격(line-height: 2.0) 및 단어 끊김 방지(word-break) 추가
     html_body = f"""
     <html>
-    <body style='font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; color: #333; line-height: 1.7; word-break: keep-all;'>
+    <body style='font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; color: #333; line-height: 1.5; word-break: keep-all;'>
         <div style='max-width: 600px; margin: 0 auto; border: 1px solid #ddd; padding: 25px; border-radius: 12px;'>
             <h2 style='color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 12px; margin-top: 0;'>
                 ✨ 오늘의 {SEARCH_TOPIC} 트렌드
