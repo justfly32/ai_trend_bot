@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from google import genai
 
 def get_ai_news_data():
-    # 1. 구글 뉴스 RSS에서 최신 AI 뉴스 5개 수집
+    # 1. 구글 뉴스 RSS에서 최신 AI 뉴스 10개 수집
     rss_url = "https://news.google.com/rss/search?q=Artificial+Intelligence&hl=ko&gl=KR&ceid=KR:ko"
     feed = feedparser.parse(rss_url)
     
@@ -31,7 +31,7 @@ def ask_gemini(news_text):
     
     prompt = f"""
     너는 IT 전문 뉴스 에디터야. 아래의 최신 AI 뉴스 헤드라인들을 읽고, 
-    오늘의 주요 트렌드를 일반인이 이해하기 쉽게 3~4문장으로 요약해줘.
+    오늘의 주요 트렌드를 일반인이 이해하기 쉽게 5문장 이내로 요약해줘.
     
     이메일 본문에 들어갈 내용이므로 HTML 태그(<strong>, <br> 등)를 
     적절히 섞어서 가독성 좋게 작성해줘. (마크다운 형식 금지)
