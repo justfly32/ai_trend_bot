@@ -13,7 +13,7 @@ def get_ai_news_data():
     news_items = []
     news_text_for_gemini = ""
     
-    for entry in feed.entries[:5]:
+    for entry in feed.entries[:10]:
         # 메일 하단 리스트용 데이터
         news_items.append({
             "title": entry.title,
