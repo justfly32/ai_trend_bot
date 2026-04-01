@@ -85,7 +85,7 @@ def send_email(news_items, summary_html):
                 ✨ 오늘의 {SEARCH_TOPIC} 트렌드
             </h2>
             
-            <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; line-height: 1.7; font-size: 16px;'>
+            <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; line-height: 1.6; font-size: 16px;'>
                 {summary_html}
             </div>
             
@@ -95,7 +95,7 @@ def send_email(news_items, summary_html):
             </ul>
             
             <hr style='border: 0; border-top: 1px solid #eee; margin: 30px 0;'>
-            <p style='font-size: 12px; color: #999; text-align: ㅣleft; line-height: 1.7;'>
+            <p style='font-size: 12px; color: #999; text-align: ㅣleft; line-height: 1.5;'>
                 본 리포트는 GitHub Actions와 Gemini 모델을 사용하여 자동으로 생성되었습니다.
             </p>
         </div>
