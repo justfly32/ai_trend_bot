@@ -61,7 +61,7 @@ def send_email(news_items, summary_html):
     receiver_email = os.environ.get('RECEIVER_EMAIL')
 
     msg = MIMEMultipart()
-    msg['Subject'] = f"🤖 [리포트] 오늘의 {SEARCH_TOPIC} 트렌드 요약"
+    msg['Subject'] = f"🤖 [AI_리포트] 오늘의 {SEARCH_TOPIC} 트렌드 요약"
     msg['From'] = sender_email
     msg['To'] = receiver_email
 
