@@ -85,7 +85,7 @@ def send_email(news_items, summary_html):
                 ✨ 오늘의 {SEARCH_TOPIC} 트렌드
             </h2>
             
-            <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; line-height: 1.6; font-size: 16px;'>
+            <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; line-height: 1.5; font-size: 16px;'>
                 {summary_html}
             </div>
             
