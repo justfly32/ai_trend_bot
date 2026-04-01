@@ -9,10 +9,10 @@ from google import genai
 # ==========================================
 # ⚙️ 봇 설정 변수
 # ==========================================
-SEARCH_TOPIC = "SK브로드밴드 최신 뉴스"             
-EXPERT_ROLE = "기업 분석 전문 애널리스트" 
-NEWS_COUNT = 10                          
-SUMMARY_SENTENCE_COUNT = 10               
+SEARCH_TOPIC = "AI 최신 뉴스"             
+EXPERT_ROLE = "AI 분석 전문 애널리스트" 
+NEWS_COUNT = 10              
+SUMMARY_SENTENCE_COUNT = 10
 # ==========================================
 
 def get_news_data():
@@ -39,7 +39,7 @@ def ask_gemini(news_text):
     # 🌟 프롬프트 수정: 문장 사이에 <br><br>을 넉넉히 넣도록 지시
     prompt = f"""
     너는 {EXPERT_ROLE}야. 아래의 최신 '{SEARCH_TOPIC}' 관련 뉴스 헤드라인 {NEWS_COUNT}개를 읽고, 
-    오늘의 주요 트렌드를 이해하기 쉽게 딱 {SUMMARY_SENTENCE_COUNT}문장으로 핵심만 요약해줘.
+    오늘의 주요 트렌드를 이해하기 쉽게 딱 {SUMMARY_SENTENCE_COUNT}문장으로 핵심만 요약해주고, 문장간의 연결은 자연스럽게 해줘.
     
     [가독성 규칙]
     1. 이메일 본문에 들어갈 내용이므로 HTML 태그(<strong> 등)를 사용해줘. (마크다운 기호 금지)
