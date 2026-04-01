@@ -77,7 +77,7 @@ def send_email(news_items, summary_html):
                 {summary_html}
             </div>
             
-            <h3 style='color: #444;'>🔗 주요 뉴스 Top 5</h3>
+            <h3 style='color: #444;'>🔗 주요 뉴스 Top 10</h3>
             <ul style='list-style: none; padding-left: 0;'>
                 {news_list_html}
             </ul>
