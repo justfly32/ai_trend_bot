@@ -9,13 +9,13 @@ from google import genai
 # ==========================================
 # ⚙️ 봇 설정 변수 (앞으로는 여기만 수정하세요!)
 # ==========================================
-SEARCH_TOPIC = "AI 최신 뉴스"             # 검색할 주제 (예: "미국 금리 인하", "테슬라 주가")
-EXPERT_ROLE = "AI 분석 전문 애널리스트" # 제미나이 역할 (예: "거시경제 전문가", "월가 주식 트레이더")
+SEARCH_TOPIC = "자율주행 자동차"             # 검색할 주제
+EXPERT_ROLE = "모빌리티 산업 전문 애널리스트" # 제미나이 역할
 NEWS_COUNT = 10                          # 가져올 뉴스 개수
+SUMMARY_SENTENCE_COUNT = 10               # 🌟 요약할 문장 수 (여기를 수정하세요!)
 # ==========================================
 
 def get_news_data():
-    # 1. 설정한 주제를 인터넷 주소용으로 변환
     encoded_topic = urllib.parse.quote(SEARCH_TOPIC)
     rss_url = f"https://news.google.com/rss/search?q={encoded_topic}&hl=ko&gl=KR&ceid=KR:ko"
     
@@ -23,7 +23,6 @@ def get_news_data():
     news_items = []
     news_text_for_gemini = ""
     
-    # 설정한 개수(NEWS_COUNT)만큼만 뉴스 가져오기
     for entry in feed.entries[:NEWS_COUNT]:
         news_items.append({
             "title": entry.title,
@@ -37,10 +36,10 @@ def ask_gemini(news_text):
     gemini_api_key = os.environ.get('GEMINI_API_KEY')
     client = genai.Client(api_key=gemini_api_key)
     
-    # 2. 프롬프트에 설정 변수들(역할, 주제, 개수)을 자동으로 쏙쏙 집어넣기
+    # 🌟 프롬프트에 SUMMARY_SENTENCE_COUNT를 반영하여 분량을 조절합니다.
     prompt = f"""
     너는 {EXPERT_ROLE}야. 아래의 최신 '{SEARCH_TOPIC}' 관련 뉴스 헤드라인 {NEWS_COUNT}개를 읽고, 
-    오늘의 주요 트렌드를 일반인이 이해하기 쉽게 10문장 이내로 핵심만 요약해줘.
+    오늘의 주요 트렌드를 일반인이 이해하기 쉽게 딱 {SUMMARY_SENTENCE_COUNT}문장으로 핵심만 요약해줘.
     
     이메일 본문에 들어갈 내용이므로 HTML 태그(<strong>, <br> 등)를 
     적절히 섞어서 가독성 좋게 작성해줘. (마크다운 형식 금지)
@@ -61,7 +60,6 @@ def send_email(news_items, summary_html):
     receiver_email = os.environ.get('RECEIVER_EMAIL')
 
     msg = MIMEMultipart()
-    # 3. 이메일 제목에도 주제(SEARCH_TOPIC)가 자동으로 들어가도록 설정
     msg['Subject'] = f"🤖 [Gemini 리포트] 오늘의 {SEARCH_TOPIC} 트렌드 요약"
     msg['From'] = sender_email
     msg['To'] = receiver_email
@@ -114,7 +112,7 @@ if __name__ == "__main__":
     print(f"[{SEARCH_TOPIC}] 뉴스 수집 및 분석 시작...")
     items, text_for_ai = get_news_data()
     
-    print("제미나이 요약 생성 중...")
+    print(f"제미나이 요약 생성 중... (목표: {SUMMARY_SENTENCE_COUNT}문장)")
     summary = ask_gemini(text_for_ai)
     
     print("이메일 발송 중...")
