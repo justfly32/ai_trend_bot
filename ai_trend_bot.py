@@ -9,8 +9,8 @@ from google import genai
 # ==========================================
 # ⚙️ 봇 설정 변수
 # ==========================================
-SEARCH_TOPIC = "AI 최신 뉴스"             
-EXPERT_ROLE = "AI 분석 전문 애널리스트" 
+SEARCH_TOPIC = "AI 최신 LLM 기술동향 및 양자컴퓨팅 뉴스"             
+EXPERT_ROLE = "AI 기술 시니어 전문가" 
 NEWS_COUNT = 10              
 SUMMARY_SENTENCE_COUNT = 10
 # ==========================================
